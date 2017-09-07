@@ -9,6 +9,10 @@
     "default_icon": "logo.jpg"
   },
   
+  "background": {
+	"scripts": ["background.js"]
+  },
+  
   "content_scripts": [
     {
 	 "matches": ["https://www.linkedin.com/jobs/search/*"],
@@ -18,7 +22,7 @@
   ],
   
   "permissions": [
-	"https://www.glassdoor.com/*"
+	"https://www.ratemyprofessors.com/*"
   ]
 
 }

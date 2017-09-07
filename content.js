@@ -1,23 +1,10 @@
 // Saikrishna Chandhrasekhar
 // September 1, 2017
 
-var cells = document.getElementsByClassName("col-xs-6 col-sm-3");
-for(var i = 0; i < cells.length; i++)
+function getIP()
 {
-	if(cells[i].innerText.indexOf("Instructor: ") != -1)
-	{
-		var display = document.createElement("span");
-		display.className = "rating";
-		var names = cells[i].innerText.replace("Instructor: ", "");
-		if(names != "Staff")
-		{
-			var profName = names.split(",");
-			var firstName = profName[1];
-			var lastName = profName[0];
-			getProfessorPage(display, firstName, lastName);
-		}
-		cells[i].appendChild(display);
-	}
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "ipinfo.io", true);
 }
 
 
