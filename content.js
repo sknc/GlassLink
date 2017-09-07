@@ -3,8 +3,9 @@
 
 function getIP()
 {
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", "ipinfo.io", true);
+	chrome.runtime.sendMessage({url: "ipinfo.io"}, function(responseText) {
+		
+	});
 }
 
 
