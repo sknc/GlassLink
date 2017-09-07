@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "GlassLink",
+  "description": "A Chrome extension that takes ratings from Glassdoor.com and displays them on LinkedIn when searching for a job.",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "logo.jpg"
+  },
+  
+  "content_scripts": [
+    {
+	 "matches": ["https://www.linkedin.com/jobs/search/*"],
+     "js": ["content.js"],
+	 "all_frames": true
+    }
+  ],
+  
+  "permissions": [
+	"https://www.glassdoor.com/*"
+  ]
+
+}
