@@ -1,59 +1,38 @@
 // Saikrishna Chandhrasekhar
-// September 1, 2017
+// September 8, 2017
 
 function getIP()
 {
 	chrome.runtime.sendMessage({url: "ipinfo.io"}, function(responseText) {
-		
+		var temp = document.createElement("div");
+		temp.innerHTML = responseText;
+		var address = temp.getElementsByTagName("h1")[0].innerText;
+		getCompanyName(address);
 	});
 }
 
-
-function getProfessorPage(display, firstName, lastName)
+function getCompanyName(address)
 {
-	chrome.runtime.sendMessage(
-	{
-		url: "http://www.ratemyprofessors.com/search.jsp?queryoption=HEADER&queryBy=teacherName&schoolName=University+of+California+Santa+Cruz&schoolID=1078&query=" + lastName
-	}, function(responseText) {
-		var temp1 = document.createElement('div');
-		temp1.innerHTML = responseText;
-		var profListings = temp1.getElementsByClassName("listing PROFESSOR");
-		var loc = 0;
-		var found = false;
-		for(var i = 0; i < profListings.length; i++)
+	$(document).ready(function() {
+		$("div").mouseenter(function() {
+			var companyid = this.getElementsById("h4")[0];
+			var companyName = companyid.innerText;
+			getData(address, companyName);
+		});
+	});
+}
+
+function getData(address, companyName)
+{
+	chrome.runtime.sendMessage({url: "http://api.glassdoor.com/api/api.htm?v=1&format=json&t.p=177556&t.k=kvtUQd0ashS&userip=" + address 
+	+ "&actions=employers&q=" + companyName + "&userAgent=" + navigator.userAgent}, function(responseText) {
+		var response = JSON.parse(responseText || null);
+		if(response != null)
 		{
-			var temp2 = document.createElement("div");
-			temp2.innerHTML = profListings[i].innerHTML;
-			var name = temp2.getElementsByClassName("main")[0].innerText;
-			var temp = name.split(",");
-			if(temp[0] == lastName && temp[1].charAt(1) == firstName.charAt(0))
+			if(response["status"] == true)
 			{
-				loc = i;
-				found = true;
-				break;
+				
 			}
-		}
-		if(lastName == "Bhattacharya" || (lastName == "Brooks" && firstName.charAt(0) == 'A'))
-			loc++; // edge cases
-		if((lastName == "Williams" && firstName.charAt(0) == 'I') || (lastName == "Guha Thakurta" && firstName.charAt(0) == 'P'))
-			found = false;
-		if(found == true)
-		{
-			var id = temp1.getElementsByClassName("listing PROFESSOR")[loc].getElementsByTagName("a")[0].getAttribute("href");
-			chrome.runtime.sendMessage({url: "http:/www.ratemyprofessors.com" + id}, function(responseText) {
-				var temp3 = document.createElement("div");
-				temp3.innerHTML = responseText;
-				var profRating = temp3.getElementsByClassName("grade")[0].innerText;
-				var profPage = "http:/www.ratemyprofessors.com" + id;
-				displayRating(display, profRating, profPage);
-			});
-		}
-		else 
-		{
-			var nbsp = document.createTextNode("\u00A0");
-			var notfound = document.createTextNode("N/A");
-			display.appendChild(nbsp);
-			display.appendChild(notfound);
 		}
 	});
 }

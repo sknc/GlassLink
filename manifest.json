@@ -16,13 +16,13 @@
   "content_scripts": [
     {
 	 "matches": ["https://www.linkedin.com/jobs/search/*"],
-     "js": ["content.js"],
+     "js": [ "jquery-3.2.1.min.js", "content.js"],
 	 "all_frames": true
     }
   ],
   
   "permissions": [
-	"https://www.ratemyprofessors.com/*"
+	"https://www.api.glassdoor.com/*"
   ]
 
 }
