@@ -31,25 +31,18 @@ function getData(address, companyName)
 		{
 			if(response["status"] == true)
 			{
-				
+				var companyRating = response["response"].employers[0].overallRating;
+				displayRating(companyName, companyRating);
 			}
 		}
 	});
 }
 
-function displayRating(display, profRating, profPage)
+function displayRating(companyName, companyRating)
 {
-	var link = document.createElement("a");
-	var node = document.createTextNode(profRating);
-	var nbsp = document.createTextNode("\u00A0");
-	if(profRating < 2.5)
-		link.style.color = "#FF0000";
-	else if(profRating >= 2.5 && profRating < 3.5)
-		link.style.color = "#FFA500";
-	else if(profRating >= 3.5)
-		link.style.color = "#00FF00";
-	link.href = profPage;
-	link.appendChild(nbsp);
-	link.appendChild(node);
-	display.appendChild(link);
+	var display = this.createElement("div");
+	var rating = this.createTextNode(companyRating);
+	display.append(rating);
+	display.append("<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>");
+	this.append(display);
 }
