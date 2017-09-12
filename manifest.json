@@ -21,8 +21,6 @@
     }
   ],
   
-  "permissions": [
-	"https://www.api.glassdoor.com/*"
-  ]
+  "permissions": ["<all_urls>"]
 
 }
