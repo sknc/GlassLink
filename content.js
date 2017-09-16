@@ -12,13 +12,18 @@ chrome.runtime.sendMessage({url: "https://ipinfo.io/"}, function(responseText) {
 function getCompanyName(address)
 {
 	$(document).ready(function() {
-		$(".job-card-search__company-location-wrapper").hover(function() {
+		var ratingDiv = document.createElement("div");
+		ratingDiv.id = "company_rating";
+		$(".job-card-search__company-location-wrapper").mouseenter(function() {
+			ratingDiv.innerHTML = "";
 			var companyName = this.getElementsByTagName("h4")[0].innerText;
-			var ratingDiv = document.createElement("div");
 			getData(address, companyName, ratingDiv);
 			$(this).append(ratingDiv);
-			$(this).append("<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>");
 		});
+		/*
+		$(".job-card-search__company-location-wrapper").mouseleave(function() {
+			document.getElementById("company_rating").remove();
+		}); */
 	});
 }
 
@@ -32,7 +37,9 @@ function getData(address, companyName, ratingDiv)
 			if(response["success"] == true)
 			{
 				var companyRating = response["response"].employers[0].overallRating;
-				ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>";
+				console.log(companyRating);
+				ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
+				console.log(ratingDiv.innerHTML);
 			}
 		}
 	});
