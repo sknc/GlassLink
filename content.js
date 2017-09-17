@@ -29,18 +29,38 @@ function getCompanyName(address)
 
 function getData(address, companyName, ratingDiv)
 {
-	var searchURL = "http://api.glassdoor.com/api/api.htm?t.p=194337&t.k=kenIlW2Q28g&format=json&v=1&action=employers&q=" + companyName + "&userip=" + address;
-	chrome.runtime.sendMessage({url: searchURL}, function(responseText) {
-		var response = JSON.parse(responseText || null);
-		if(response != null)
-		{
-			if(response["success"] == true)
+	if(sessionStorage.getItem(companyName))
+	{
+		var companyRating = sessionStorage.getItem(companyName);
+		ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
+		
+	}
+	else
+	{
+		var searchURL = "http://api.glassdoor.com/api/api.htm?t.p=194337&t.k=kenIlW2Q28g&format=json&v=1&action=employers&q=" + companyName + "&userip=" + address;
+		chrome.runtime.sendMessage({url: searchURL}, function(responseText) {
+			var response = JSON.parse(responseText || null);
+			if(response != null)
 			{
-				var companyRating = response["response"].employers[0].overallRating;
-				console.log(companyRating);
-				ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
-				console.log(ratingDiv.innerHTML);
+				if(response["success"] == true)
+				{
+					var companyRating = response["response"].employers[0].overallRating;
+					sessionStorage.setItem(companyName, companyRating);
+					ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
+				}
+			
+				else if(response["success"] == false)
+				{
+					var companyRating = "Requests throttled by Glassdoor.";
+					ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
+				}
 			}
-		}
-	});
+			
+			else
+			{
+				var companyRating = "Could not find ratings.";
+				ratingDiv.innerHTML = "<span id = glassdoor_rating>" + companyRating + "</span>" + " " + "<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>";
+			}
+		});
+	}
 }
